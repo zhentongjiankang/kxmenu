@@ -64,7 +64,8 @@ const CGFloat kArrowSize = 12.f;
         UITapGestureRecognizer *gestureRecognizer;
         gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                     action:@selector(singleTap:)];
-        [self addGestureRecognizer:gestureRecognizer];
+        //引用时自己添加手势控制
+//        [self addGestureRecognizer:gestureRecognizer];
     }
     return self;
 }
@@ -191,7 +192,9 @@ typedef enum {
     const CGFloat rectX1 = fromRect.origin.x + fromRect.size.width;
     const CGFloat rectXM = fromRect.origin.x + fromRect.size.width * 0.5f;
     const CGFloat rectY0 = fromRect.origin.y;
-    const CGFloat rectY1 = fromRect.origin.y + fromRect.size.height;
+    
+    //使弹出的menu距离button+26距离（不然会紧挨在一起）
+    const CGFloat rectY1 = fromRect.origin.y + fromRect.size.height + 26;
     const CGFloat rectYM = fromRect.origin.y + fromRect.size.height * 0.5f;;
     
     const CGFloat widthPlusArrow = contentSize.width + kArrowSize;
@@ -440,7 +443,8 @@ typedef enum {
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectZero];
     contentView.autoresizingMask = UIViewAutoresizingNone;
-    contentView.backgroundColor = [UIColor clearColor];
+    //不然会有渐变色
+    contentView.backgroundColor = [UIColor blackColor];
     contentView.opaque = NO;
     
     CGFloat itemY = kMarginY * 2;
@@ -571,9 +575,10 @@ typedef enum {
 + (UIImage *) selectedImage: (CGSize) size
 {
     const CGFloat locations[] = {0,1};
+    //将选中颜色由蓝色改为灰色
     const CGFloat components[] = {
-        0.216, 0.471, 0.871, 1,
-        0.059, 0.353, 0.839, 1,
+        0.7176, 0.6941, 0.6431, 1,
+        0.7176, 0.6941, 0.6431, 1,
     };
     
     return [self gradientImageWithSize:size locations:locations components:components count:2];
