@@ -171,8 +171,9 @@ typedef enum {
         self.alpha = 0;
         
         self.layer.shadowOpacity = 0.5;
-        self.layer.shadowOffset = CGSizeMake(2, 2);
-        self.layer.shadowRadius = 2;
+        //修改阴影
+        self.layer.shadowOffset = CGSizeMake(0, 0);
+        self.layer.shadowRadius = 1;
     }
     
     return self;
@@ -193,8 +194,8 @@ typedef enum {
     const CGFloat rectXM = fromRect.origin.x + fromRect.size.width * 0.5f;
     const CGFloat rectY0 = fromRect.origin.y;
     
-    //使弹出的menu距离button+26距离（不然会紧挨在一起）
-    const CGFloat rectY1 = fromRect.origin.y + fromRect.size.height + 26;
+    //调整弹出的menu距离title的距离
+    const CGFloat rectY1 = fromRect.origin.y + fromRect.size.height + 10;
     const CGFloat rectYM = fromRect.origin.y + fromRect.size.height * 0.5f;;
     
     const CGFloat widthPlusArrow = contentSize.width + kArrowSize;
@@ -422,8 +423,9 @@ typedef enum {
         const CGSize titleSize = [menuItem.title sizeWithFont:titleFont];
         const CGSize imageSize = menuItem.image.size;
 
-        const CGFloat itemHeight = MAX(titleSize.height, imageSize.height) + kMarginY * 2;
-        const CGFloat itemWidth = ((!menuItem.enabled && !menuItem.image) ? titleSize.width : maxImageWidth + titleSize.width) + kMarginX * 4;
+        //增加item高度和宽度
+        const CGFloat itemHeight = MAX(titleSize.height, imageSize.height) + kMarginY * 2 + 10;
+        const CGFloat itemWidth = ((!menuItem.enabled && !menuItem.image) ? titleSize.width : maxImageWidth + titleSize.width) + kMarginX * 4 + 50;
         
         if (itemHeight > maxItemHeight)
             maxItemHeight = itemHeight;
@@ -444,7 +446,7 @@ typedef enum {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectZero];
     contentView.autoresizingMask = UIViewAutoresizingNone;
     //不然会有渐变色
-    contentView.backgroundColor = [UIColor blackColor];
+    contentView.backgroundColor = [UIColor whiteColor];
     contentView.opaque = NO;
     
     CGFloat itemY = kMarginY * 2;
@@ -462,7 +464,7 @@ typedef enum {
         [contentView addSubview:itemView];
         
         if (menuItem.enabled) {
-        
+            menuItem.foreColor = [UIColor clearColor];
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.tag = itemNum;
             button.frame = itemView.bounds;
@@ -474,6 +476,10 @@ typedef enum {
             [button addTarget:self
                        action:@selector(performAction:)
              forControlEvents:UIControlEventTouchUpInside];
+            button.titleLabel.font = [UIFont systemFontOfSize:15];
+            [button setTitle:menuItem.title forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor colorWithRed:102 / 255.0 green:102 / 255.0 blue:102 / 255.0 alpha:1.0] forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             
             [button setBackgroundImage:selectedImage forState:UIControlStateHighlighted];
             
@@ -530,7 +536,8 @@ typedef enum {
             UIImageView *gradientView = [[UIImageView alloc] initWithImage:gradientLine];
             gradientView.frame = (CGRect){kMarginX * 2, maxItemHeight + 1, gradientLine.size};
             gradientView.contentMode = UIViewContentModeLeft;
-            [itemView addSubview:gradientView];
+            //去掉分割线
+//            [itemView addSubview:gradientView];
             
             itemY += 2;
         }
@@ -575,10 +582,10 @@ typedef enum {
 + (UIImage *) selectedImage: (CGSize) size
 {
     const CGFloat locations[] = {0,1};
-    //将选中颜色由蓝色改为灰色
+    //将选中颜色改为绿色
     const CGFloat components[] = {
-        0.7176, 0.6941, 0.6431, 1,
-        0.7176, 0.6941, 0.6431, 1,
+        0.0039, 0.7529, 0.6431, 1,
+        0.0039, 0.7529, 0.6431, 1,
     };
     
     return [self gradientImageWithSize:size locations:locations components:components count:2];
@@ -629,8 +636,9 @@ typedef enum {
 - (void)drawBackground:(CGRect)frame
              inContext:(CGContextRef) context
 {
-    CGFloat R0 = 0.267, G0 = 0.303, B0 = 0.335;
-    CGFloat R1 = 0.040, G1 = 0.040, B1 = 0.040;
+    //将背景色改为白色
+    CGFloat R0 = 1, G0 = 1, B0 = 1;
+    CGFloat R1 = 1, G1 = 1, B1 = 1;
     
     UIColor *tintColor = [KxMenu tintColor];
     if (tintColor) {
